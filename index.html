@@ -550,14 +550,19 @@
         try {
           const enrollments = readEnrollments();
           const normalizedCode = enrollment.code.toLowerCase();
+          const normalizedName = enrollment.name.toLowerCase();
           const alreadyRegistered = enrollments.some((savedEnrollment) =>
             savedEnrollment.period === enrollment.period &&
-            typeof savedEnrollment.code === "string" &&
-            savedEnrollment.code.trim().toLowerCase() === normalizedCode
+            (
+              (typeof savedEnrollment.code === "string" &&
+                savedEnrollment.code.trim().toLowerCase() === normalizedCode) ||
+              (typeof savedEnrollment.name === "string" &&
+                savedEnrollment.name.trim().toLowerCase() === normalizedName)
+            )
           );
 
           if (alreadyRegistered) {
-            showStatus(`El estudiante con código «${enrollment.code}» ya tiene matrícula en el periodo ${enrollment.period}.`, "warning");
+            showStatus(`El código «${enrollment.code}» o el nombre «${enrollment.name}» ya tiene matrícula en el periodo ${enrollment.period}.`, "warning");
             return;
           }
 
